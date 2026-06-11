@@ -41,7 +41,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.cursor > 0 { m.cursor-- }
 		case "down", "j":
 			if m.cursor < len(m.choices)-1 { m.cursor++ }
-		case "enter":
+		case "enter", "\r":
 			return m.handleEnter()
 		case "esc":
 			m.state = mainMenu

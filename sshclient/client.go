@@ -2,7 +2,6 @@ package sshclient
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -14,7 +13,7 @@ type Client struct {
 }
 
 func Connect(addr, user, keyPath string) (*Client, error) {
-	key, err := ioutil.ReadFile(keyPath)
+	key, err := os.ReadFile(keyPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read private key: %v", err)
 	}

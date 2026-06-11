@@ -57,15 +57,31 @@ func (m *model) handleEnter() (tea.Model, tea.Cmd) {
 	case mainMenu:
 		switch m.cursor {
 		case 0: // Manage Keys
-			m.state = keyMenu
 			foundKeys, _ := keys.ListKeys()
+			if len(foundKeys) == 0 {
+				foundKeys = []string{"(no keys found)"}
+			}
+			m.state = keyMenu
 			m.choices = foundKeys
+			m.cursor = 0
 		case 1: // VPS Management
 			m.state = vpsMenu
 			m.choices = []string{"Setup New User", "Harden SSH", "Back"}
+			m.cursor = 0
 		case 2: // Quit
 			return m, tea.Quit
 		}
+	case vpsMenu:
+		if m.cursor == len(m.choices)-1 { // Back
+			m.state = mainMenu
+			m.choices = []string{"Manage SSH Keys", "VPS Management", "Quit"}
+			m.cursor = 0
+		}
+	case keyMenu:
+		// Return to main menu on any key selection
+		m.state = mainMenu
+		m.choices = []string{"Manage SSH Keys", "VPS Management", "Quit"}
+		m.cursor = 0
 	}
 	return m, nil
 }

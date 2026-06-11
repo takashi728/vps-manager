@@ -48,6 +48,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.cursor = 0
 			m.choices = []string{"Manage SSH Keys", "VPS Management", "Quit"}
 		}
+	case tea.MouseMsg:
+		if msg.Button != tea.MouseButtonLeft || msg.Action != tea.MouseActionPress {
+			break
+		}
+		// Header takes 2 lines; choices start at row 2
+		choice := msg.Y - 2
+		if choice >= 0 && choice < len(m.choices) {
+			m.cursor = choice
+			return m.handleEnter()
+		}
 	}
 	return m, nil
 }
@@ -98,7 +108,7 @@ func (m model) View() string {
 }
 
 func main() {
-	p := tea.NewProgram(initialModel())
+	p := tea.NewProgram(initialModel(), tea.WithMouseCellMotion())
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("Error: %v", err)
 		os.Exit(1)
